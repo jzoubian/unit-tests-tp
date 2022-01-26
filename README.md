@@ -131,7 +131,8 @@ Now test the `physics::collide()` and `physics::elastic_collision()` in `test-ph
 Particle in C++
 ---------------
 
-If you know C++ you can transpose the tests in C++ in the `part-2-simple-ut-particle/cpp` directory.
+If you know C++ you can transpose the tests in C++ in the `part-2-simple-ut-particle/cpp` directory. We ill use Google Test to
+write our tests.
 
 To build:
 
@@ -147,4 +148,36 @@ Look in `test-basic.cpp` for an example and implement the particle tests.
 
 Apply mocking by testing a cache
 --------------------------------
+
+If you go in `part-3-cache-mock/python` you will find a cache to be tested.
+
+There is two components:
+ - The cache to keep the data in memory.
+ - A storage backend generic class to say how to write the data to/from its final destination.
+
+```python
+class StorageBackend:
+	def pwrite(self, data: bytearray, offset) -> int:
+	def pread(self, offset, size) -> bytearray:
+
+class Cache:
+	def __init__(backend: StorageBackend):
+	def pwrite(self, data, offset):
+	def pread(self, offset, size)
+	def flush():
+```
+
+We will mock the storage backend to not have the real final implementation
+which can possiblty depend from an external comple database or
+any other storages.
+
+You can first look on `test_basic_mock.py` to see how we mock a function.
+
+We will make two king of mocking:
+ - A first one by hand (without any framework)
+ - A second one using the python default mocking framework.
+
+First implement a mocked version of the storage backend. You should
+hardcode the responses to return for the pread and pwrite calls.
+`pwrite()` return the size which has been written, choose 5 if you will write "Hello". `pread()` will return a fixed bytearray.
 
