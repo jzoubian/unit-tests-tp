@@ -47,10 +47,9 @@ BacktraceStack::BacktraceStack(void)
 void BacktraceStack::loadCurrentStack(void)
 {
 	//allocate a stack if we do not yet have one
-	this->stack = this->mem;
 	if (this->stack == NULL)
 		this->grow();
-
+	
 	//try to load in current buffer, if not realloc and retry
 	bool retry;
 	do {
@@ -59,11 +58,9 @@ void BacktraceStack::loadCurrentStack(void)
 		//int loadedSize = GetStackTrace(this->stack,this->memSize,0);
 		int loadedSize = Backtrace::backtrace(this->stack,this->memSize);
 
-		//>>>>>>>> TO REMOVE WHEN FINISHED <<<<<<<
 		//@todo: remove this temporary refactoring fix to used to run simu_simple_lbm
-		//       it cut the stack.
-		//if (loadedSize > 8)
-		//	loadedSize -= 5;
+		if (loadedSize > 6)
+			loadedSize = 6;
 
 		//check
 		assert(loadedSize <= this->memSize);
@@ -87,7 +84,7 @@ void BacktraceStack::loadCurrentStack(void)
 			retry = false;
 		}
 	} while(retry);
-
+	
 	//fix addresses, backtrace return next instruction, by substracting 1 we go to the middle
 	//of the previous instruction. addr2line is ok with non exact addresses under linux at least.
 	for (int i = 0 ; i < this->size ; i++)

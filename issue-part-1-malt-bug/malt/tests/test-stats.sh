@@ -6,8 +6,8 @@ set -e
 # set vars
 SOURCE_DIR=${1}
 EXE="./test-main"
-PROF_OK="/tmp/test-malt-ok.json"
-PROF_CURRENT="/tmp/test-malt-current.json"
+PROF_OK="./test-malt-ok.json"
+PROF_CURRENT="./test-malt-current.json"
 
 #colors
 RESET="\x1b[0m"
@@ -55,4 +55,3 @@ else
 	echo -e "${RED}>>>>>>>>>>>>> NOT OK <<<<<<<<<<<<<<${RESET}"
 	exit 1
 fi
-
