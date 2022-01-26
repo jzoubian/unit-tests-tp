@@ -26,12 +26,6 @@ This practical sessoin proceed in three steps:
 Debugging MALT
 --------------
 
-Extract `/home/admin/sebv/part-1-malt-bug.tar.bz2` in a directory.
-
-```sh
-tar xvf /home/admin/sebv/part-1-malt-bug.tar.bz2
-```
-
 Go into the `part-1-malt-bug/malt` directory and build malt.
 
 ```sh
