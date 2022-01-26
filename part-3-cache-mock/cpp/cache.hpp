@@ -33,8 +33,8 @@ class StrorageBackend
 {
 	public:
 		virtual ~StrorageBackend(void) {};
-		virtual size_t pwrite(const Buffer & value, size_t offset) = 0;
-		virtual Buffer pread(size_t size, size_t offset) = 0;
+		virtual size_t pwrite(const Buffer & value, size_t offset) {return 0;};
+		virtual Buffer pread(size_t size, size_t offset) {return Buffer("");};
 };
 
 /*********************************************************/

@@ -25,3 +25,13 @@ add_test(test-range test-range)
 add_executable(test-cache test-cache.cpp)
 target_link_libraries(test-cache cache GTest::GTest gmock gmock_main)
 add_test(test-cache test-cache)
+
+######################################################
+add_executable(test-cache-manual test-cache-manual.cpp)
+target_link_libraries(test-cache-manual cache GTest::GTest GTest::Main)
+add_test(test-cache-manual test-cache-manual)
+
+######################################################
+add_executable(test-basic-mock test-basic-mock.cpp)
+target_link_libraries(test-basic-mock GTest::GTest gmock gmock_main)
+add_test(test-basic-mock test-basic-mock)

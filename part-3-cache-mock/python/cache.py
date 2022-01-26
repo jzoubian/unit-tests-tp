@@ -6,9 +6,9 @@ class StorageBackend:
 	"""
 	Define the storage backend to be plugged under the cache
 	"""
-	def pwrite(self, data, offset) -> int:
+	def pwrite(self, data: bytearray, offset) -> int:
 		return -1
-	def pread(self, offset, size) -> int:
+	def pread(self, offset, size) -> bytearray:
 		return bytearray()
 
 class CacheEntryState(Enum):
@@ -39,63 +39,12 @@ class Cache:
 		self.backend = backend
 		self.entries = []
 
-	def get_sort_key(entry: CacheEntry):
-		return entry.range.offset
-
-	def create_entries(self, offset, size):
-		# build range
-		cur_range = Range(offset, size)
-
-		# loop on all entries to find the holes we need to fill by allocating a new entry
-		for i in range(len(self.entries)):
-			# extract the entry
-			entry = self.entries[i]
-
-			# check if overlap
-			if Range.overlap(cur_range, entry.range):
-				# get the left and right segment by extruding the incomming one with the pre-existing one
-				left, right = Range.exclude(cur_range, entry.range)
-
-				# if the left residut is not NULL
-				if left.size > 0:
-					self.entries.append(CacheEntry(left.offset, left.size))
-				
-				# replace current by the right residut
-				cur_range = right
-			
-			# the current become NULL, we can stop we reached the enf of the overlapping region
-			if cur_range.size == 0:
-				break
-
-		# There is a last one to insert after the last pre-existing one
-		if cur_range.size != 0:
-			self.entries.append(CacheEntry(cur_range.offset, cur_range.size))
-
-		# sort again
-		self.entries.sort(key = Cache.get_sort_key)
-
-	def apply_read_on_new_entries(self):
-		# loop on all entries
-		for entry in self.entries:
-			# check if not loaded or dirty
-			if entry.state == CacheEntryState.NEW:
-				# load data
-				data = self.backend.pread(entry.range.offset, entry.range.size)
-
-				# failed to load
-				if len(data) != entry.range.size:
-					raise Exception("Not enougth data to read")
-
-				# fill the new entry
-				entry.data = data
-				entry.state = CacheEntryState.CLEAN
-
 	def pwrite(self, data, offset):
 		# build range object to ease implementation
 		op_range = Range(offset, len(data))
 
 		# create all required new entries
-		self.create_entries(op_range.offset, op_range.size)
+		self._create_entries(op_range.offset, op_range.size)
 
 		# loop on all
 		for entry in self.entries:
@@ -119,10 +68,10 @@ class Cache:
 		op_range = Range(offset, size)
 
 		# create all required new entries
-		self.create_entries(op_range.offset, op_range.size)
+		self._create_entries(op_range.offset, op_range.size)
 
 		# perform read operation to fetch data from the storage
-		self.apply_read_on_new_entries()
+		self._apply_read_on_new_entries()
 
 		# allocate memory to load data in
 		out_data = bytearray(size)
@@ -157,4 +106,55 @@ class Cache:
 					raise Exception("Fail to fully write data into storage backend")
 
 				# mark clean
+				entry.state = CacheEntryState.CLEAN
+
+	def _get_sort_key(entry: CacheEntry):
+		return entry.range.offset
+
+	def _create_entries(self, offset, size):
+		# build range
+		cur_range = Range(offset, size)
+
+		# loop on all entries to find the holes we need to fill by allocating a new entry
+		for i in range(len(self.entries)):
+			# extract the entry
+			entry = self.entries[i]
+
+			# check if overlap
+			if Range.overlap(cur_range, entry.range):
+				# get the left and right segment by extruding the incomming one with the pre-existing one
+				left, right = Range.exclude(cur_range, entry.range)
+
+				# if the left residut is not NULL
+				if left.size > 0:
+					self.entries.append(CacheEntry(left.offset, left.size))
+				
+				# replace current by the right residut
+				cur_range = right
+			
+			# the current become NULL, we can stop we reached the enf of the overlapping region
+			if cur_range.size == 0:
+				break
+
+		# There is a last one to insert after the last pre-existing one
+		if cur_range.size != 0:
+			self.entries.append(CacheEntry(cur_range.offset, cur_range.size))
+
+		# sort again
+		self.entries.sort(key = Cache._get_sort_key)
+
+	def _apply_read_on_new_entries(self):
+		# loop on all entries
+		for entry in self.entries:
+			# check if not loaded or dirty
+			if entry.state == CacheEntryState.NEW:
+				# load data
+				data = self.backend.pread(entry.range.offset, entry.range.size)
+
+				# failed to load
+				if len(data) != entry.range.size:
+					raise Exception("Not enougth data to read")
+
+				# fill the new entry
+				entry.data = data
 				entry.state = CacheEntryState.CLEAN
