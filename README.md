@@ -12,7 +12,8 @@ cd unit-test-tp
 Debugging MALT
 --------------
 
-Extract /home/admin/sebv/part-1-malt-bug.tar.bz2 in a directory.
+Extract `/home/admin/sebv/part-1-malt-bug.tar.bz2` in a directory.
+
 ```sh
 tar xvf /home/admin/sebv/part-1-malt-bug.tar.bz2
 ```
@@ -30,6 +31,18 @@ make install
 export PATH=$PATH:${HOME}/usr/bin
 ```
 
+If you work on a remote server, you will need to forward
+a port to get the malt webview rendered in your local browser.
+If the server you are running by multiple users doing this
+practical session randomly choose a port in place of the
+8080.
+
+```sh
+# we forward the port to get access to the webview from
+# our browser
+ssh -i keys/{username}.key {username}@{server} -L8080:localhost:8080
+```
+
 If you want to play with it:
 
 ```sh
@@ -37,13 +50,7 @@ If you want to play with it:
 malt ./tests/test-main
 # launch the webview
 # The first time it will ask the create a user/password to secure the GUI
-malt-webview -i malt-test-main-89762.json
-```
-
-```sh
-# we forward the port to get access to the webview from
-# our browser
-ssh -i keys/{username}.key {username}@134.158.21.53 -L8080:localhost:8080
+malt-webview -i malt-test-main-{PID}.json -p 8080
 ```
 
 Now you can open your local browser on http://localhost:8080:
@@ -51,6 +58,8 @@ Now you can open your local browser on http://localhost:8080:
  - Click on function `call_a` on the left
  - Look on the page bottom table
  - It says the allocated memory is 0
+
+![Malt bug seen in the webview](images/malt-webview-bug.png)
 
 You can launch an integation test:
 
@@ -85,7 +94,7 @@ ctest -R {TEST_NAME} -V
 
 **TODO**: Find the source location of the test and go to it.
 **TODO**: Look on what is used and go in the implementation source (you might need to use grep to find the function).
-**TODO**: Look on the code and find the issue.
+**TODO**: Look on the code and find the issue, look on comments.
 
 Run again the tests to check the solution.
 Is it not easier with unit tests ?
@@ -125,6 +134,14 @@ You can to:
  - test the default properties
  - move it
  - test again the properties
+
+There is also the physics implementation in `physics.py` which provide:
+
+```python
+def collide(particle1: Particle, particle2: Particle, dt) -> bool:
+def elastic_collision(particle1: Particle, particle2: Particle, dt) -> bool:
+def get_collision_time(particle1: Particle, particle2: Particle):
+```
 
 Now test the `physics::collide()` and `physics::elastic_collision()` in `test-physics.cpp`.
 
