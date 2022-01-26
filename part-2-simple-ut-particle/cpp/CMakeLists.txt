@@ -13,6 +13,11 @@ enable_testing()
 add_library(experiment SHARED particle.cpp physics.cpp)
 
 ######################################################
+add_executable(test-basic test-basic.cpp)
+target_link_libraries(test-basic experiment GTest::GTest GTest::Main)
+add_test(test-basic test-basic)
+
+######################################################
 add_executable(test-particle test-particle.cpp)
 target_link_libraries(test-particle experiment GTest::GTest GTest::Main)
 add_test(test-particle test-particle)

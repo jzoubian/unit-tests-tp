@@ -126,3 +126,18 @@ You can to:
  - move it
  - test again the properties
 
+Particle in C++
+---------------
+
+If you know C++ you can transpose the tests in C++ in the `part-2-simple-ut-particle/cpp` directory.
+
+To build:
+
+```sh
+mkdir build
+cd build
+cmake ..
+make
+make test
+```
+
