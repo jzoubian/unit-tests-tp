@@ -38,7 +38,7 @@ bool Range::overlap(const Range & range1, const Range & range2)
 }
 
 /*********************************************************/
-std::pair<Range, Range> Range::extrude(const Range & range1, const Range & range2)
+std::pair<Range, Range> Range::exclude(const Range & range1, const Range & range2)
 {
 	assert(Range::overlap(range1, range2));
 	size_t offset_left = std::min(range1.offset, range2.offset);

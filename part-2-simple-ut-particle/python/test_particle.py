@@ -3,12 +3,12 @@ from particle import Particle
 
 class TestParticle(TestCase):
 	def test_constructor(self):
-		particle = Particle(0, 1)
-		self.assertEqual(0, particle.get_x())
-		self.assertEqual(1, particle.get_vx())
+		# 1 - build a particle
+		# 2 - test its default properties
+		raise NotImplementedError("error")
 
 	def test_move(self):
-		particle = Particle(0, 1)
-		particle.move(0.5)
-		self.assertEqual(0.5, particle.get_x())
-		self.assertEqual(1, particle.get_vx())
+		# 1 - build a particle
+		# 2 - move it with a dt
+		# 3 - check its new properties
+		raise NotImplementedError("error")

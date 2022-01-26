@@ -4,29 +4,25 @@ import physics
 
 class TestPysiscs(TestCase):
 	def test_collide(self):
-		particle1 = Particle(-1.0, 1.0)
-		particle2 = Particle(1.0, -1.0)
-		self.assertFalse(physics.collide(particle1, particle2, 0.5))
-		self.assertFalse(physics.collide(particle1, particle2, 0.9))
-		self.assertTrue(physics.collide(particle1, particle2, 1.0))
-		self.assertTrue(physics.collide(particle1, particle2, 2.0))
-	
-	def test_get_collision_time_1_symetric(self):
-		particle1 = Particle(-1.0, 1.0)
-		particle2 = Particle(1.0, -1.0)
-		self.assertEqual(1.0, physics.get_collision_time(particle1, particle2))
+		# 1 - build two particles going to collide
+		# 2 - test Physics.collide() with a dt too short (no collision)
+		# 3 - test Physics.collide() with a dt just OK
+		# 4 - test Physics.collide() with a dt larger than OK
+		raise NotImplementedError("error")
 
+	def test_get_collision_time_1_symetric(self):
+		# 1 - build two particules in a symmetric configuration
+		# 2 - check get_collision_time() time
+		raise NotImplementedError("error")
+	
 	def test_get_collision_time_2_asymetric(self):
-		particle1 = Particle(-0.5, 1.0)
-		particle2 = Particle(1.0, -1.0)
-		self.assertEqual(0.75, physics.get_collision_time(particle1, particle2))
+		# 1 - build two particules in an asymetric configuratoin
+		# 2 - check get_collision_time() time
+		raise NotImplementedError("error")
 
 	def test_elastic_collision_1_symetric(self):
-		particle1 = Particle(-1.0, 1.0)
-		particle2 = Particle(1.0, -1.0)
-		ret = physics.elastic_collision(particle1, particle2, 2)
-		self.assertTrue(ret)
-		self.assertEqual(-1.0, particle1.get_x())
-		self.assertEqual(-1.0, particle1.get_vx())
-		self.assertEqual(1.0, particle2.get_x())
-		self.assertEqual(1.0, particle2.get_vx())
+		# 1 - build two particules in a symmetric configuration
+		# 2 - call elastic_collision() with a valid dt
+		# 3 - check status of the function
+		# 4 - check new properties of both particules
+		raise NotImplementedError("error")

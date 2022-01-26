@@ -36,25 +36,25 @@ TEST(TestRange, overlap)
 }
 
 /*********************************************************/
-TEST(TestRange, extrude_middle)
+TEST(TestRange, exclude_middle)
 {
-	auto res = Range::extrude(Range(0, 20), Range(5, 5));
+	auto res = Range::exclude(Range(0, 20), Range(5, 5));
 	EXPECT_EQ(Range(0, 5), res.first);
 	EXPECT_EQ(Range(10, 10), res.second);
 }
 
 /*********************************************************/
-TEST(TestRange, extrude_left)
+TEST(TestRange, exclude_left)
 {
-	auto res = Range::extrude(Range(0, 20), Range(0, 5));
+	auto res = Range::exclude(Range(0, 20), Range(0, 5));
 	EXPECT_EQ(Range(0, 0), res.first);
 	EXPECT_EQ(Range(5, 15), res.second);
 }
 
 /*********************************************************/
-TEST(TestRange, extrude_right)
+TEST(TestRange, exclude_right)
 {
-	auto res = Range::extrude(Range(0, 20), Range(15, 5));
+	auto res = Range::exclude(Range(0, 20), Range(15, 5));
 	EXPECT_EQ(Range(0, 15), res.first);
 	EXPECT_EQ(Range(20, 0), res.second);
 }

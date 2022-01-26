@@ -20,10 +20,13 @@ struct Buffer
 	Buffer(const char * value);
 	~Buffer(void);
 	Buffer & operator=(const Buffer & orig);
-	bool operator==(const Buffer & orig) const;
+	bool operator==(const Buffer & value) const;
 	char * data;
 	size_t size;
 };
+
+/*********************************************************/
+std::ostream & operator <<(std::ostream & out, const Buffer & buffer);
 
 /*********************************************************/
 class StrorageBackend

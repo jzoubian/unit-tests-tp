@@ -1,7 +1,38 @@
 from turtle import back
 from unittest import TestCase, mock
-import unittest
 from cache import *
+
+class ManualMockBackend(StorageBackend):
+	def __init__(self):
+		self.data = bytearray(0)
+	def pwrite(self,data, offset) -> int:
+		self.data = data
+		return len(data)
+	def pread(self,offset, size) -> int:
+		return self.data
+
+class ManualTestCache(TestCase):
+	def test_init(self):
+		backend = ManualMockBackend()
+		cache = Cache(backend)
+
+	def test_pread(self):
+		backend = ManualMockBackend()
+		cache = Cache(backend)
+
+		backend.data = b"test"
+		res = cache.pread(10, 4)
+		self.assertEqual(res, b"test")
+
+	def test_pwrite(self):
+		backend = ManualMockBackend()
+		cache = Cache(backend)
+
+		backend.data = b"----"
+		res = cache.pwrite(b"test", 10)
+		self.assertEqual(backend.data, b"----")
+		cache.flush()
+		self.assertEqual(backend.data, b"test")
 
 class TestCache(TestCase):
 	def test_init_1(self):
@@ -64,5 +95,3 @@ class TestCache(TestCase):
 		cache.pwrite(b"abcde", 5)
 		cache.flush()
 		backend.pwrite.assert_called_once_with(b"abcde", 5)
-
-		

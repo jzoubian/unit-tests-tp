@@ -1,5 +1,4 @@
 from unittest import TestCase, mock
-import unittest
 from range import Range
 
 class TestRange(TestCase):
@@ -24,18 +23,18 @@ class TestRange(TestCase):
 		self.assertFalse(Range.overlap(r3, r4))
 		self.assertFalse(Range.overlap(r3, r4))
 
-	def test_extrude_middle(self):
-		left, right = Range.extrude(Range(0, 20), Range(5, 5))
+	def test_exclude_middle(self):
+		left, right = Range.exclude(Range(0, 20), Range(5, 5))
 		self.assertEqual(Range(0, 5), left)
 		self.assertEqual(Range(10, 10), right)
 
-	def test_extrude_left(self):
-		left, right = Range.extrude(Range(0, 20), Range(0, 5))
+	def test_exclude_left(self):
+		left, right = Range.exclude(Range(0, 20), Range(0, 5))
 		self.assertEqual(Range(0, 0), left)
 		self.assertEqual(Range(5, 15), right)
 
-	def test_extrude_right(self):
-		left, right = Range.extrude(Range(0, 20), Range(15, 5))
+	def test_exclude_right(self):
+		left, right = Range.exclude(Range(0, 20), Range(15, 5))
 		self.assertEqual(Range(0, 15), left)
 		self.assertEqual(Range(20, 0), right)
 	

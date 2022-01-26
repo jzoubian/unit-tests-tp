@@ -18,7 +18,7 @@ class Range:
 	def overlap(range1, range2) -> bool:
 		return not (range1.end() <= range2.offset or range2.end() <= range1.offset)
 
-	def extrude(range1, range2):
+	def exclude(range1, range2):
 		assert(Range.overlap(range1, range2))
 		offset_left = min(range1.offset, range2.offset)
 		offset_right = max(range1.offset, range2.offset)
@@ -33,3 +33,6 @@ class Range:
 		offset = max(range1.offset, range2.offset)
 		end = min(range1.end(), range2.end())
 		return Range(offset, end - offset)
+
+	def shift(self, delta_offset: int):
+		return Range(self.offset + delta_offset, self.size)

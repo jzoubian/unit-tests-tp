@@ -19,7 +19,7 @@ class Range
 		bool operator<(const Range & other) const;
 		size_t end(void) const;
 		static bool overlap(const Range & range1, const Range & range2);
-		static std::pair<Range, Range> extrude(const Range & range1, const Range & range2);
+		static std::pair<Range, Range> exclude(const Range & range1, const Range & range2);
 		static Range intersect(const Range & range1, const Range & range2);
 		size_t get_offset(void) const {return this->offset;};
 		size_t get_size(void) const {return  this->size;};

@@ -76,7 +76,11 @@ Buffer::~Buffer(void)
 /*********************************************************/
 Buffer & Buffer::operator=(const Buffer & orig)
 {
-	assert(this->size == orig.size);
+	if (this->size != orig.size) {
+		delete [] this->data;
+		this->data = new char[orig.size];
+		this->size = orig.size;
+	}
 	memcpy(this->data, orig.data, this->size);
 	return *this;
 }
@@ -87,6 +91,14 @@ bool Buffer::operator==(const Buffer & orig) const
 	if (this->size != orig.size)
 		return false;
 	return strncmp(this->data, orig.data, this->size) == 0;
+}
+
+/*********************************************************/
+std::ostream & cache::operator <<(std::ostream & out, const Buffer & buffer)
+{
+	for (size_t i = 0 ; i < buffer.size ; i++)
+		out << buffer.data[i];
+	return out;
 }
 
 /*********************************************************/
@@ -124,7 +136,7 @@ void Cache::create_entries(Range range)
 	Range cur_range = range;
 	for (auto & entry : this->entries) {
 		if (Range::overlap(cur_range, entry.range)) {
-			auto res = Range::extrude(cur_range, entry.range);
+			auto res = Range::exclude(cur_range, entry.range);
 			Range left = res.first;
 			Range right = res.second;
 			if (left.get_size() > 0)

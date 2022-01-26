@@ -8,39 +8,35 @@ using namespace experiment;
 /*********************************************************/
 TEST(TestPhysics, collide)
 {
-	Particle particle1(-1.0, 1.0);
-	Particle particle2(1.0, -1.0);
-	EXPECT_FALSE(physics::collide(particle1, particle2, 0.5));
-	EXPECT_FALSE(physics::collide(particle1, particle2, 0.9));
-	EXPECT_TRUE(physics::collide(particle1, particle2, 1.0));
-	EXPECT_TRUE(physics::collide(particle1, particle2, 2.0));
+	// 1 - build two particles going to collide
+	// 2 - test Physics.collide() with a dt too short (no collision)
+	// 3 - test Physics.collide() with a dt just OK
+	// 4 - test Physics.collide() with a dt larger than OK
+	ASSERT_TRUE(false) << "Not implemented";
 }
 
 /*********************************************************/
 TEST(TestPhysics, get_collision_time_1_symetric)
 {
-	Particle particle1(-1.0, 1.0);
-	Particle particle2(1.0, -1.0);
-	EXPECT_EQ(1.0, physics::get_collision_time(particle1, particle2));
+	// 1 - build two particules in a symmetric configuration
+	// 2 - check get_collision_time() time
+	ASSERT_TRUE(false) << "Not implemented";
 }
 
 /*********************************************************/
 TEST(TestPhysics, get_collision_time_2_asymetric)
 {
-	Particle particle1(-0.5, 1.0);
-	Particle particle2(1.0, -1.0);
-	EXPECT_EQ(0.75, physics::get_collision_time(particle1, particle2));
+	// 1 - build two particules in an asymetric configuratoin
+	// 2 - check get_collision_time() time
+	ASSERT_TRUE(false) << "Not implemented";
 }
 
 /*********************************************************/
 TEST(TestPhysics, test_elastic_collision_1_symetric)
 {
-	Particle particle1(-1.0, 1.0);
-	Particle particle2(1.0, -1.0);
-	bool ret = physics::elastic_collision(particle1, particle2, 2);
-	ASSERT_TRUE(ret);
-	EXPECT_EQ(-1.0, particle1.get_x());
-	EXPECT_EQ(-1.0, particle1.get_vx());
-	EXPECT_EQ(1.0, particle2.get_x());
-	EXPECT_EQ(1.0, particle2.get_vx());
+	// 1 - build two particules in a symmetric configuration
+	// 2 - call elastic_collision() with a valid dt
+	// 3 - check status of the function
+	// 4 - check new properties of both particules
+	ASSERT_TRUE(false) << "Not implemented";
 }
