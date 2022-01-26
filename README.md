@@ -100,3 +100,29 @@ TODO: Go in `part-2-simple-ut-particle/python`.
 
 We will test a particle in a 1D space which can move and collide.
 
+**TODO**: Look on `test_basic.py` and run the test with:
+
+```sh
+pytest
+```
+
+**REMARK**: the tests should be named `test_*.py`.
+
+Now to into `test_particle.py`, we will test the particle.
+
+TODO: test the constructor and the `move()` function.
+
+```python
+class Particle:
+	def __init__(x, vx)
+	def move(dt)
+	def get_x()
+	def get_vz()
+```
+
+You can to:
+ - create a particle
+ - test the default properties
+ - move it
+ - test again the properties
+
