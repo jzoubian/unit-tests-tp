@@ -95,3 +95,8 @@ First unit test in python
 -------------------------
 
 We will make out first unit test, in python.
+
+TODO: Go in `part-2-simple-ut-particle/python`.
+
+We will test a particle in a 1D space which can move and collide.
+
