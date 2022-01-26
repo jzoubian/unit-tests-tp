@@ -1,0 +1,164 @@
+#!/bin/sh
+######################################################
+#            PROJECT  : MALT                         #
+#            VERSION  : 1.2.2                        #
+#            DATE     : 10/2020                      #
+#            AUTHOR   : Valat Sébastien              #
+#            LICENSE  : CeCILL-C                     #
+######################################################
+
+######################################################
+ENABLE_MPI=false
+MPI_WRAPPER_DIR="$HOME/.malt"
+MALT_OPTIONS=""
+MALT_VERSION="@MALT_VERSION@@MALT_VERSION_NOTE@"
+
+######################################################
+maltCheckArgs()
+{
+	if [ -z "$2" ]; then
+		echo "MALT: Missing value for option '$1'" 1>&2
+		exit 1
+	fi
+}
+
+######################################################
+maltPrepMPI()
+{
+	#create dir
+	if [ ! -d "$MPI_WRAPPER_DIR/" ]; then
+		mkdir -p "$MPI_WRAPPER_DIR" || exit 1
+	fi
+	
+	#select mpicxx
+	mpicxx="$1"
+
+	#missing parameter
+	if [ -z "$mpicxx" ]; then
+		if [ ! -z "$MPICXX" ]; then
+			echo "No mpicxx provided by command, trying your MPICXX="$MPICXX" from environnement !"
+			mpicxx="$MPICXX"
+		else
+			echo "No mpicxx provided by command, trying default 'mpicxx' from environnement !"
+			mpicxx=mpicxx
+		fi
+	fi
+
+	#compile file
+	echo "$mpicxx" '-shared' '-fPIC' "@CMAKE_INSTALL_PREFIX@/share/malt/MaltMPIRank.cpp" -o "$MPI_WRAPPER_DIR/libmaltmpi.so"
+	"$mpicxx" '-shared' '-fPIC' "@CMAKE_INSTALL_PREFIX@/share/malt/MaltMPIRank.cpp" -o "$MPI_WRAPPER_DIR/libmaltmpi.so"
+	
+	#finish
+	exit $?
+}
+
+######################################################
+maltShowHelp()
+{
+	echo "Usage : malt [--config file] [--help] [--] YOUR_COMMAND"
+	echo ""
+	echo "Options:"
+	echo "   -c file/--config file       Provide configuration file in INI format."
+	echo "           --mpi               Use MPI wrapper to get ranks in output file names."
+	echo "           --prep-mpi [mpicxx] Build the mpi wrapper into $HOME/.malt/libmaltmpi.so"
+	echo "   -s mode/--stack=mode        Select the stack tracking mode (backtrace|enter-exit)."
+	echo "   -q/--quiet                  Enable silent mode."
+	echo "   -v/--verbose                Enable verbose mode."
+	echo "   -t/--trace                  Enable the tracing mode."
+	echo "   -d/--dumpconfig             Enable the dump of config file at exit."
+	echo "   -o SEC:NAME=VAL;...         Override configuration values."
+	echo "   --version                   Print current MALT version."
+	echo "   -h/--help                   Show this help message."
+	echo ""
+}
+
+######################################################
+#Check args
+while true; do
+	case "$1" in
+		--version)
+			echo "${MALT_VERSION}"
+			exit 0
+		;;
+		--help|-h)
+			maltShowHelp
+			exit 0
+		;;
+		--config|-c)
+			maltCheckArgs "$@"
+			export MALT_CONFIG="$2"
+			shift 2
+		;;
+		--stack|-s)
+			maltCheckArgs "$@"
+			export MALT_STACK="$2"
+			shift 2
+		;;
+		--trace|-t)
+			export MALT_OPTIONS="${MALT_OPTIONS};trace:enabled=true"
+			shift 1
+		;;
+		--quiet|-q)
+			export MALT_OPTIONS="${MALT_OPTIONS};output:verbosity=silent"
+			shift 1
+		;;
+		--verbose|-v)
+			export MALT_OPTIONS="${MALT_OPTIONS};output:verbosity=verbose"
+			shift 1
+		;;
+		--option|-o)
+			maltCheckArgs "$@"
+			export MALT_OPTIONS="${MALT_OPTIONS};$2"
+			shift 2
+		;;
+		--dumpconfig|-d)
+			export MALT_OPTIONS="${MALT_OPTIONS};output:config=true"
+			shift 1
+			;;
+		--mpi)
+			ENABLE_MPI=true
+			if [ ! -e "${MPI_WRAPPER_DIR}/libmaltmpi.so" ]; then
+				echo "Missing MPI wrapper to extract ranks, please prepare it with 'malt --prep-mpi=MPICXX' !"
+				exit 1
+			fi
+			shift 1
+		;;
+		--prep-mpi)
+			case "$2" in
+				-*)
+					maltPrepMPI
+					shift 1
+				;;
+				*)
+					maltPrepMPI "$2"
+					shift 2
+				;;
+			esac
+		;;
+		--)
+			shift 1
+			break
+		;;
+		*)
+			break
+		;;
+	esac
+done
+
+######################################################
+#debug env
+# if [ ! -z "$MALT_CONFIG" ]; then echo "MALT_CONFIG=$MALT_CONFIG"; fi
+
+######################################################
+MALT_LIB="@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@/libmalt.so"
+if [ ! -f "${MALT_LIB}" ]; then
+	MALT_LIB="@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@/libmalt.so"
+fi
+
+######################################################
+#run
+if [ "${ENABLE_MPI}" = "true" ]; then
+	LD_PRELOAD="${MPI_WRAPPER_DIR}/libmaltmpi.so:${MALT_LIB}:${LD_PRELOAD}" "$@"
+else
+	LD_PRELOAD="${MALT_LIB}:${LD_PRELOAD}" "$@"
+fi

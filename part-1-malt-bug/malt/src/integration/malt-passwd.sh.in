@@ -1,0 +1,64 @@
+#!/bin/sh
+######################################################
+#            PROJECT  : MALT                         #
+#            VERSION  : 1.2.2                        #
+#            DATE     : 10/2020                      #
+#            AUTHOR   : Valat Sébastien              #
+#            LICENSE  : CeCILL-C                     #
+######################################################
+
+######################################################
+NODE=""
+detectNodeJS()
+{
+	if which nodejs 2>/dev/null >/dev/null; then
+		NODE='nodejs'
+	elif which node 2>/dev/null >/dev/null; then
+		NODE='node'
+	elif [ ! -z "$MALT_NODEJS" ]; then
+		NODE="$MALT_NODEJS"
+	else
+		echo "ERROR : Cannot find NodeJS executable, please install 'node' or 'nodejs' package for your system or check your PATH." 1>&2
+		echo "You can also define the MALT_NODEJS environnement variable to point the NodeJS executable." 1>&2
+		exit 1
+	fi
+}
+
+######################################################
+if [ -z "$*" ]; then
+	echo "Error, missing arguement, provide a user as parameter" 1>&2
+	echo "$0 {USER}" 1>&2
+	exit 1
+fi
+
+######################################################
+#check node
+detectNodeJS
+
+######################################################
+#create dir
+if [ ! -d "$HOME/.malt" ]; then
+	mkdir "$HOME/.malt"
+fi
+
+######################################################
+for arg in "$@"
+do
+	case $arg in
+		-b*)
+			HAVE_OPT="true"
+			;;
+	esac
+done
+
+#call node on main script
+if [ -z "$HAVE_OPT" ]; then
+	"$NODE" "@CMAKE_INSTALL_PREFIX@/share/malt/webview/node_modules/.bin/htpasswd" "-c" "$HOME/.malt/passwd" "$@" || exit 1
+else
+	"$NODE" "@CMAKE_INSTALL_PREFIX@/share/malt/webview/node_modules/.bin/htpasswd" "$@" || exit 1
+fi
+
+#chmod file
+if [ -f "$HOME/.malt/passwd" ]; then
+	chmod go-r "$HOME/.malt/passwd"
+fi

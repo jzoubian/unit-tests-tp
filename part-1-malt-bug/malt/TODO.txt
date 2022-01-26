@@ -1,0 +1,41 @@
+TODO
+====
+
+Might be trivial
+----------------
+
+ * Use a dynamic lib to load tracer reader into node instead of using process output forward, might bt ok by using nodejs c++ wrappers
+
+Not so much work
+----------------
+
+ * Add support for mmap/munmap/mremap
+   Need to track overlap and gaps on munmap to track the memory it frees.
+ * Add usage of stack ID infos in time charts. Need to add them with time classes
+ * Add option MALT_SLIENT to remove output.
+ * Add option to filter exe for instr
+ * Add option to not instrument childs.
+ * Do reuse of per thread structure
+ * Permit to mark some user function as alloc function for inclusive/exclusive (ideally, click on function and 'mark as alloc wrapper')
+   It might apply in isAllocFunction()
+ * Remove the libs virtual memorty in virtual memory charts ?
+ 
+Need work
+---------
+
+ * Fix numbering of .trace files in MPI mode (it use PID instead of rank)
+   Delay open after MPI_Init. Need to manage the fact that the buffer might be too small if too
+   much allocations are done before.
+ * Add profiling of physical/virtual ratio
+   Expect to use move_pages but not usable when NUMA is disable, need to use /proc/PID/pagemap
+ * Add profiling of NUMA mappings
+ * Maybe store the stack tree as a tree instead of list of call stack (can reduce output file size of a factor 2), but
+   need some patch in GUI to rebuild the list representation used everywhere.
+   Not so much work for the lib side as there is a tree class already available, but might need some work on the webview side.
+   A first step might be to juste regenerate the current format in memory when loading the file in the client MaltProject class.
+ * In webview, page for source annotations : add tree view of costs for call site (by default when source are not availables) [CFG]
+ * Integration of tracer. Need to call the reader through node and return the informations in GUI. Interesting to do :
+    - possibility to get memory used at some timestep by each call stacks (return ids, chunk count and memory size), partially done in trace reader
+    - possibility to get the time chart of a specific call site
+    - possibility to get size distribution of a specific call site and maybe timestep
+ * Need to add integration of trace system into webview
