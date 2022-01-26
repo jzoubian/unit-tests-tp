@@ -46,6 +46,7 @@ BacktraceStack::BacktraceStack(void)
 **/
 void BacktraceStack::loadCurrentStack(void)
 {
+	this->stack = mem;
 	//allocate a stack if we do not yet have one
 	if (this->stack == NULL)
 		this->grow();
@@ -57,10 +58,6 @@ void BacktraceStack::loadCurrentStack(void)
 		//int loadedSize = backtrace(this->stack,this->memSize);
 		//int loadedSize = GetStackTrace(this->stack,this->memSize,0);
 		int loadedSize = Backtrace::backtrace(this->stack,this->memSize);
-
-		//@todo: remove this temporary refactoring fix to used to run simu_simple_lbm
-		if (loadedSize > 6)
-			loadedSize = 6;
 
 		//check
 		assert(loadedSize <= this->memSize);
