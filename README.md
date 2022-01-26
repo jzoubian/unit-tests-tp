@@ -9,6 +9,20 @@ git clone /home/admin/sebv/unit-test-tp.git
 cd unit-test-tp
 ```
 
+Correction
+----------
+
+You can find the correction in the `correction` branch.
+
+What will be done
+-----------------
+
+This practical sessoin proceed in three steps:
+
+ - See how fast can unit tests be to find and fix a bug in an unknown software compared to integration test or no tests (example on MALT).
+ - First unit tests on a particle class in python or C++
+ - First usage of mocking on a cache implementation in python or C++
+
 Debugging MALT
 --------------
 
