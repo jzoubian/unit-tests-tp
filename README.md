@@ -1,24 +1,21 @@
 Unit test practical session
 ===========================
 
-Connecrt to the toy server:
----------------------------
-
-ssh -o StrictHostKeyChecking=no -o "UserKnownHostsFile /dev/null"   USER@134.158.21.51 -L8080:localhost:8080
-ssh -o StrictHostKeyChecking=no -o "UserKnownHostsFile /dev/null"   USER@134.158.21.53 -L8080:localhost:8080
-ssh -o StrictHostKeyChecking=no -o "UserKnownHostsFile /dev/null"   USER@134.158.21.57 -L8080:localhost:8080
-
 Clone the sources
 -----------------
 
 ```sh
 git clone /home/admin/sebv/unit-test-tp.git
+cd unit-test-tp
 ```
 
 Debugging MALT
 --------------
 
 Extract /home/admin/sebv/part-1-malt-bug.tar.bz2 in a directory.
+```sh
+tar xvf /home/admin/sebv/part-1-malt-bug.tar.bz2
+```
 
 Go into the `part-1-malt-bug/malt` directory and build malt.
 
@@ -29,6 +26,8 @@ cd build
 ../configure --enable-debug --prefix=$HOME/usr
 make
 make install
+# add the local binary path to $PATH
+export PATH=$PATH:${HOME}/usr/bin
 ```
 
 If you want to play with it:
@@ -44,7 +43,7 @@ malt-webview -i malt-test-main-89762.json
 ```sh
 # we forward the port to get access to the webview from
 # our browser
-ssh server -L8080:localhost:8080
+ssh -i keys/{username}.key {username}@134.158.21.53 -L8080:localhost:8080
 ```
 
 Now you can open your local browser on http://localhost:8080:
@@ -71,7 +70,7 @@ Take a few minutes to try anyway.
 After a few minutes, lets enable the unit tests:
 
 ```sh
-./configure --enable-debug --enable-tests
+../configure --enable-debug --enable-tests
 make
 make test
 ```
@@ -103,7 +102,8 @@ We will test a particle in a 1D space which can move and collide.
 **TODO**: Look on `test_basic.py` and run the test with:
 
 ```sh
-pytest
+# pytest, on debian :
+pytest-3
 ```
 
 **REMARK**: the tests should be named `test_*.py`.
