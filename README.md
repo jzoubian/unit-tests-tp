@@ -126,6 +126,8 @@ You can to:
  - move it
  - test again the properties
 
+Now test the `physics::collide()` and `physics::elastic_collision()` in `test-physics.cpp`.
+
 Particle in C++
 ---------------
 
@@ -140,4 +142,9 @@ cmake ..
 make
 make test
 ```
+
+Look in `test-basic.cpp` for an example and implement the particle tests.
+
+Apply mocking by testing a cache
+--------------------------------
 
